@@ -1,4 +1,4 @@
-package serverapp.mii.co.id.mcc76;
+package id.co.mii.serverapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

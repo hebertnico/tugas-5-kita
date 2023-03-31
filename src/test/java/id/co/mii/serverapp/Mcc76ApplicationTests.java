@@ -1,4 +1,4 @@
-package serverapp.mii.co.id.mcc76;
+package id.co.mii.serverapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
