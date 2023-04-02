@@ -8,6 +8,9 @@ public class Mcc76Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Mcc76Application.class, args);
+
+		System.out.println("\nApp is running...");
+	
 	}
 
 }
