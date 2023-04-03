@@ -23,7 +23,7 @@ public class EmailService {
     private SpringTemplateEngine template;
 
     @Async
-    public void send(String to, EmailRequest eR) {
+    public void send(EmailRequest eR) {
 
         try {
             MimeMessage msg = ms.createMimeMessage();
@@ -34,7 +34,7 @@ public class EmailService {
 
             String html = template.process("verification-email", ctx);
 
-            hlp.setTo(to);
+            hlp.setTo(eR.getTo());
             hlp.setText(html, true);
             hlp.setSubject("Confirm your email");
 

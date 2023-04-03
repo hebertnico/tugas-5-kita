@@ -1,6 +1,8 @@
 package id.co.mii.serverapp.registration;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,6 @@ public class RegistService {
     private final EmailValidator ev;
     private final ConfirmService cService;
     private final EmailService eS;
-    private EmailRequest eRq;
 
     public String register(RegistRequest r) {
         boolean isvalid = ev.test(r.getEmail());
@@ -36,10 +37,16 @@ public class RegistService {
                 r.getPassw(),
                 AppUserRole.USER));
 
-        // eRq.setLink("http://localhost:9000/v1/registration/confirm?token=" + token);
-        // eRq.setProps({link = "http://localhost:9000/v1/registration/confirm?token=" +
-        // token});
-        eS.send(r.getEmail(), eRq);
+        EmailRequest eRq = new EmailRequest(r.getEmail());
+
+        Map<String, Object> prop = new HashMap<>();
+
+        prop.put("name", r.getFirstName());
+        prop.put("link", "http://localhost:9000/v1/registration/confirm?token=" +
+                token);
+
+        eRq.setProps(prop);
+        eS.send(eRq);
         return token;
     }
 
