@@ -9,28 +9,37 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class EmailService implements EmailSender {
+public class EmailService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender ms;
+    private SpringTemplateEngine template;
 
-    @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String to, EmailRequest eR) {
 
         try {
             MimeMessage msg = ms.createMimeMessage();
-            MimeMessageHelper hlp = new MimeMessageHelper(msg, "utf-8");
+            MimeMessageHelper hlp = new MimeMessageHelper(msg, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, "utf-8");
 
-            hlp.setText(email);
+            Context ctx = new Context();
+            ctx.setVariables(eR.getProps());
+
+            String html = template.process("verification-email", ctx);
+
             hlp.setTo(to);
+            hlp.setText(html, true);
             hlp.setSubject("Confirm your email");
-            hlp.setFrom("hello@amigoscode.com");
+
+            ms.send(msg);
+            System.out.println("\nEmail success to send");
 
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);

@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import id.co.mii.serverapp.appuser.AppUser;
 import id.co.mii.serverapp.appuser.AppUserRole;
 import id.co.mii.serverapp.appuser.AppUserService;
-import id.co.mii.serverapp.email.EmailSender;
+import id.co.mii.serverapp.email.EmailRequest;
+import id.co.mii.serverapp.email.EmailService;
 import id.co.mii.serverapp.registration.token.ConfirmService;
 import id.co.mii.serverapp.registration.token.ConfirmationToken;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,8 @@ public class RegistService {
     private final AppUserService aUserService;
     private final EmailValidator ev;
     private final ConfirmService cService;
-    private final EmailSender ems;
+    private final EmailService eS;
+    private EmailRequest eRq;
 
     public String register(RegistRequest r) {
         boolean isvalid = ev.test(r.getEmail());
@@ -34,7 +36,10 @@ public class RegistService {
                 r.getPassw(),
                 AppUserRole.USER));
 
-        // ems.send(r.getEmail(), msg);
+        // eRq.setLink("http://localhost:9000/v1/registration/confirm?token=" + token);
+        // eRq.setProps({link = "http://localhost:9000/v1/registration/confirm?token=" +
+        // token});
+        eS.send(r.getEmail(), eRq);
         return token;
     }
 
